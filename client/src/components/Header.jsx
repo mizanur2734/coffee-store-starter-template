@@ -42,7 +42,7 @@ const Header = () => {
                   <Link to='/addCoffee'>Add Coffee</Link>
                 </li>
                 <li>
-                  <Link to='/my-added-coffees'>My Added Coffee's</Link>
+                  <Link to={`/my-added-coffees/${user?.email}`}>My Added Coffee's</Link>
                 </li>
                 <li>
                   <Link to='/my-orders'>My Orders</Link>
@@ -52,6 +52,7 @@ const Header = () => {
           </ul>
         </div>
         <a className='btn btn-ghost text-xl'>Coffee Store</a>
+        <input type="checkbox" value="cupcake" className="toggle theme-controller" />
       </div>
       <div className='navbar-end hidden lg:flex'>
         <ul className='menu menu-horizontal px-1 items-center'>
@@ -68,7 +69,8 @@ const Header = () => {
                 <Link to='/addCoffee'>Add Coffee</Link>
               </li>
               <li>
-                <Link to='/my-added-coffees'>My Added Coffee's</Link>
+                {/* <Link to='/my-added-coffees'>My Added Coffee's</Link> */}
+                <Link to={`/my-added-coffees/${user?.email}`}>My Added Coffee's</Link>
               </li>
               <li>
                 <Link to='/my-orders'>My Orders</Link>

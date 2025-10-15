@@ -1,21 +1,24 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
 
-import { createBrowserRouter, RouterProvider } from 'react-router'
-import MainLayout from './layouts/MainLayout.jsx'
-import Home from './components/Home.jsx'
-import AddCoffee from './components/AddCoffee.jsx'
-import UpdateCoffee from './components/UpdateCoffee.jsx'
-import CoffeeDetails from './components/CoffeeDetails.jsx'
-import SignIn from './components/SignIn.jsx'
-import SignUp from './components/SignUp.jsx'
-import AuthProvider from './contexts/AuthProvider.jsx'
-import axios from 'axios'
+import { createBrowserRouter, RouterProvider } from "react-router";
+import MainLayout from "./layouts/MainLayout.jsx";
+import Home from "./components/Home.jsx";
+import AddCoffee from "./components/AddCoffee.jsx";
+import UpdateCoffee from "./components/UpdateCoffee.jsx";
+import CoffeeDetails from "./components/CoffeeDetails.jsx";
+import SignIn from "./components/SignIn.jsx";
+import SignUp from "./components/SignUp.jsx";
+import AuthProvider from "./contexts/AuthProvider.jsx";
+import axios from "axios";
+import MyAddedCoffees from "./components/MyAddedCoffees.jsx";
+import PrivateRoute from "./routes/PrivateRoute.jsx";
+import MyOrders from "./components/MyOrders.jsx";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     Component: MainLayout,
     children: [
       {
@@ -24,33 +27,44 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: 'addCoffee',
-        Component: AddCoffee,
+        path: "addCoffee",
+        element: <PrivateRoute><AddCoffee></AddCoffee></PrivateRoute>
       },
       {
-        path: 'coffee/:id',
-        Component: CoffeeDetails,
+        path: "my-orders",
+        element: <PrivateRoute><MyOrders></MyOrders></PrivateRoute>
       },
       {
-        path: 'updateCoffee/:id',
-        Component: UpdateCoffee,
+        path: "coffee/:id",
+        loader: ({ params }) =>
+          axios(`${import.meta.env.VITE_API_URL}/coffee/${params.id}`),
+        element: <PrivateRoute><CoffeeDetails></CoffeeDetails></PrivateRoute>
       },
       {
-        path: 'signin',
+        path: "updateCoffee/:id",
+        element: <PrivateRoute><UpdateCoffee></UpdateCoffee></PrivateRoute>
+      },
+      {
+        path: "signin",
         Component: SignIn,
       },
       {
-        path: 'signup',
+        path: "signup",
         Component: SignUp,
+      },
+      {
+        path: "my-added-coffees/:email",
+        loader: ({params}) => axios(`${import.meta.env.VITE_API_URL}/my-coffees/${params.email}`),
+        element: <PrivateRoute><MyAddedCoffees></MyAddedCoffees></PrivateRoute>
       },
     ],
   },
-])
+]);
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
   </StrictMode>
-)
+);
